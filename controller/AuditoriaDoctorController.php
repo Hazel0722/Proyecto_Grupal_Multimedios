@@ -12,12 +12,27 @@ class AuditoriaDoctorController {
 
     // 🔍 Obtener todas las auditorías de doctores
     public function obtenerTodos() {
-        return $this->dao->obtenerTodos();
+        try {
+            return $this->dao->obtenerTodos();
+        } catch (Exception $e) {
+            error_log('Error en AuditoriaDoctorController::obtenerTodos - ' . $e->getMessage());
+            return [];
+        }
     }
 
     // 🔍 Obtener una auditoría específica por ID
     public function obtenerPorId($id) {
-        return $this->dao->obtenerPorId($id);
+        if (!is_numeric($id)) {
+            error_log("ID inválido: $id");
+            return null;
+        }
+
+        try {
+            return $this->dao->obtenerPorId($id);
+        } catch (Exception $e) {
+            error_log('Error en AuditoriaDoctorController::obtenerPorId - ' . $e->getMessage());
+            return null;
+        }
     }
 }
 
