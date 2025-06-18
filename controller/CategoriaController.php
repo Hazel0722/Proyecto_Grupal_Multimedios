@@ -12,12 +12,26 @@ class CategoriasController {
 
     // 🔍 Obtener todas las categorías
     public function obtenerTodos() {
-        return $this->dao->obtenerTodos();
+        try {
+            return $this->dao->obtenerTodos();
+        } catch (Exception $e) {
+            error_log("Error al obtener categorías: " . $e->getMessage());
+            return [];
+        }
     }
 
     // 🔍 Obtener una categoría por ID
     public function obtenerPorId($id) {
-        return $this->dao->obtenerPorId($id);
+        if (!is_numeric($id)) {
+            throw new Exception("ID inválido.");
+        }
+
+        try {
+            return $this->dao->obtenerPorId($id);
+        } catch (Exception $e) {
+            error_log("Error al obtener categoría por ID: " . $e->getMessage());
+            return null;
+        }
     }
 
     // ➕ Insertar una nueva categoría
@@ -32,6 +46,10 @@ class CategoriasController {
 
     // ✏️ Actualizar una categoría existente
     public function actualizar($id, $datos) {
+        if (!is_numeric($id)) {
+            throw new Exception("ID inválido.");
+        }
+
         $categoria = $this->dao->obtenerPorId($id);
         if (!$categoria) {
             throw new Exception("Categoría no encontrada.");
@@ -46,6 +64,10 @@ class CategoriasController {
 
     // 🗑️ Eliminar una categoría por ID
     public function eliminar($id) {
+        if (!is_numeric($id)) {
+            throw new Exception("ID inválido.");
+        }
+
         return $this->dao->eliminar($id);
     }
 }
